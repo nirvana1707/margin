@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" data-theme="paper">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Margin</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f4ecd8'/%3E%3Cpath d='M18 14h20l8 8v28H18z' fill='%23fff' stroke='%235b4636' stroke-width='3'/%3E%3Cpath d='M24 30h16M24 37h16M24 44h10' stroke='%235b4636' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M12 12v40' stroke='%23c0392b' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<link rel="stylesheet" href="vendor/hljs/light.css" id="hljs-theme">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/app.css">
+<script>
+  // Apply saved look before first paint (avoids a white flash in Night mode).
+  try { const s = JSON.parse(localStorage.getItem('margin.settings') || '{}');
+        if (s.theme) document.documentElement.dataset.theme = s.theme; } catch (e) {}
+</script>
+</head>
+<body>
+<div id="app">
+
+  <!-- ===================== LIBRARY ===================== -->
+  <section id="library" class="view" hidden>
+    <header class="lib-head">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Margin</div>
+      <div class="lib-search">
+        <svg class="i"><use href="#i-search"/></svg>
+        <input id="lib-filter" type="search" placeholder="Filter your library" autocomplete="off">
+      </div>
+      <div class="lib-actions">
+        <button id="lib-review" class="btn accent" hidden><svg class="i"><use href="#i-cards"/></svg><span>Review</span></button>
+        <button id="lib-add" class="btn"><svg class="i"><use href="#i-folder"/></svg><span>Add folder</span></button>
+        <label class="btn" title="Open Markdown files from your computer"><svg class="i"><use href="#i-upload"/></svg><span>Open files</span><input id="lib-files" type="file" accept=".md,.markdown,.mdown,.mkd,.mdx,.txt,text/markdown,text/plain" multiple hidden></label>
+        <button id="lib-theme" class="icon-btn" title="Change theme"><svg class="i"><use href="#i-moon"/></svg></button>
+      </div>
+    </header>
+
+    <div class="lib-body">
+      <div id="lib-continue"></div>
+      <div class="lib-toolbar">
+        <div id="lib-shelves" class="chips"></div>
+        <div class="lib-view-opts">
+          <select id="lib-sort" aria-label="Sort">
+            <option value="recent">Recently read</option>
+            <option value="title">Title</option>
+            <option value="modified">Recently modified</option>
+            <option value="folder">Folder</option>
+            <option value="progress">Progress</option>
+          </select>
+          <div class="seg" role="group" aria-label="View">
+            <button data-view="grid" title="Covers"><svg class="i"><use href="#i-grid"/></svg></button>
+            <button data-view="list" title="List"><svg class="i"><use href="#i-list"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div id="lib-books"></div>
+    </div>
+  </section>
+
+  <!-- ===================== READER ===================== -->
+  <section id="reader" class="view" hidden>
+    <header class="r-top">
+      <button class="icon-btn" id="r-back" title="Library (Esc)"><svg class="i"><use href="#i-back"/></svg></button>
+      <button class="icon-btn" id="r-toc" title="Contents (T)"><svg class="i"><use href="#i-toc"/></svg></button>
+      <div class="r-title" id="r-title"></div>
+      <div class="r-tools">
+        <button class="icon-btn" data-panel="search" title="Search (/)"><svg class="i"><use href="#i-search"/></svg></button>
+        <button class="icon-btn" data-panel="concepts" title="Key concepts (K)"><svg class="i"><use href="#i-bulb"/></svg></button>
+        <button class="icon-btn" data-panel="notebook" title="Notebook (N)"><svg class="i"><use href="#i-note"/></svg></button>
+        <button class="icon-btn" id="r-review" title="Review cards (R)"><svg class="i"><use href="#i-cards"/></svg><span class="badge" id="r-due" hidden></span></button>
+        <button class="icon-btn" id="r-bookmark" title="Bookmark page (B)"><svg class="i"><use href="#i-bookmark"/></svg></button>
+        <button class="icon-btn" id="r-export" title="Export PDF (P)"><svg class="i"><use href="#i-print"/></svg></button>
+        <button class="icon-btn aa" data-panel="settings" title="Reading settings (A)">Aa</button>
+      </div>
+    </header>
+
+    <main id="viewport">
+      <div id="clip">
+        <article id="content" class="md" lang="en"></article>
+      </div>
+      <div id="ribbon" hidden></div>
+      <div id="back-chip" hidden><button class="bc-go" type="button" title="Go back (Alt+←)">↩ <span class="bc-label"></span></button><button class="bc-x" type="button" title="Dismiss">×</button></div>
+    </main>
+
+    <footer class="r-foot">
+      <div class="r-foot-row">
+        <button id="f-chapter" class="f-left" title="Contents (T)"></button>
+        <button id="f-info" class="f-mid" title="Click to change"></button>
+        <span id="f-pct" class="f-right"></span>
+      </div>
+      <div id="f-bar"><div id="f-fill"></div><div id="f-ticks"></div></div>
+    </footer>
+
+    <aside id="panel" class="panel" hidden>
+      <div class="panel-head"><h2 id="panel-title"></h2><button class="icon-btn" id="panel-close" title="Close (Esc)"><svg class="i"><use href="#i-x"/></svg></button></div>
+      <div id="panel-body" class="panel-body"></div>
+    </aside>
+
+    <div id="selmenu" class="popup" hidden></div>
+    <div id="popover" class="popup popover" hidden></div>
+  </section>
+
+  <!-- ===================== OVERLAYS ===================== -->
+  <div id="modal" class="modal" hidden><div class="modal-card" id="modal-card"></div></div>
+  <div id="toast" hidden></div>
+  <div id="drop-overlay" hidden><div>Drop Markdown files to open them</div></div>
+</div>
+
+<!-- Icons (inline so the app works fully offline) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M4 5h6a3 3 0 0 1 2 1 3 3 0 0 1 2-1h6v13h-6a2 2 0 0 0-2 2 2 2 0 0 0-2-2H4z"/><path d="M12 6v14"/></symbol>
+    <symbol id="i-toc" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r=".6"/><circle cx="4.5" cy="12" r=".6"/><circle cx="4.5" cy="18" r=".6"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5z"/><path d="M15 3v4h4M8 12h8M8 16h5"/></symbol>
+    <symbol id="i-cards" viewBox="0 0 24 24"><rect x="3" y="7" width="14" height="12" rx="2"/><path d="M7 4h12a2 2 0 0 1 2 2v10"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 10v6M9 13h6"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="7" rx="1"/><rect x="14" y="4" width="6" height="7" rx="1"/><rect x="4" y="14" width="6" height="7" rx="1"/><rect x="14" y="14" width="6" height="7" rx="1"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v12M7 11l5 5 5-5"/><path d="M4 20h16"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/></symbol>
+  </defs>
+</svg>
+
+<script src="vendor/markdown-it.min.js"></script>
+<script src="vendor/markdown-it-footnote.min.js"></script>
+<script src="vendor/markdown-it-task-lists.min.js"></script>
+<script src="vendor/katex/katex.min.js"></script>
+<script src="vendor/texmath.js"></script>
+<script src="vendor/hljs/highlight.min.js"></script>
+<script src="vendor/purify.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
