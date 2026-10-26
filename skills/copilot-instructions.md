@@ -2,6 +2,8 @@
 
 When I ask for notes, an explainer, a deep dive or anything to study, write it as Markdown for my Margin reader:
 
+- Teach from basic building blocks: first list the concepts needed and order them so each depends only on earlier ones; state prerequisites (a `## Building Blocks` section if there are any); never use a term before defining it; for each concept give why → plain-language mechanism → definition → formal version → example and non-example.
+- Write clearly: one idea per sentence (usually ≤ 25 words), active voice, one word per concept, no filler — but never drop a fact, number or caveat.
 - Start with one `# Title` on the first line, then a 1–2 sentence intro. Use `## ` chapters (at least 2, each 150–800 words) and `### ` for sub-points. No bold, links or emoji in headings.
 - Write key concepts as `- **Term**: definition` (or `**Term** — definition`) with the bold term at the very start of the line and a full-clause definition that does not repeat the term. Include at least 4 per document. Use bold only for key terms; use *italics* for emphasis. Never bold labels like Note, Example, Pros, Step 1.
 - Math: inline `$...$` or `\(...\)`; display `$$...$$` or `\[...\]` on their own lines with blank lines around. Escape money as `\$20`.

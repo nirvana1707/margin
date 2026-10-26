@@ -98,7 +98,7 @@ Margin understands a textbook structure in plain Markdown — modelled on practi
 | `## Objective I` / `## Objective II` + options `   - (a) …` | Clickable multiple choice (single / one-or-more correct), checked against the key |
 | `## Answer Key` with `### Objective I` + `1. (b)` … | Folded answer key, linked to every problem |
 
-Progress is tracked per section (shown in **Contents**), missed questions are collected in the Notebook's **Practice** tab, any question can become a flashcard (formulas included), and PDF export can put the answers at the end of the chapter, next to each question, or leave them out for a practice copy. Recall checkpoints appear after the teaching sections, before the problems. Open the built-in *Sample chapter — Motion in a Straight Line* to try it. The `margin-textbook` skill teaches Copilot or Claude to write and convert content into this format.
+Progress is tracked per section (shown in **Contents**), missed questions are collected in the Notebook's **Practice** tab, any question can become a flashcard (formulas included), and PDF export can put the answers at the end of the chapter, next to each question, or leave them out for a practice copy. Recall checkpoints appear after the teaching sections, before the problems. Chapters can open with a driving question in `> [!PROBLEM]` and a `## Building Blocks` section listing prerequisites. Open the built-in *Sample chapter — Motion in a Straight Line* to try it. The `margin-textbook` skill teaches Copilot or Claude to write and convert content into this format, building every chapter from basic building blocks; `margin-course` plans a whole subject as a series of chapters.
 
 ### Built for LLM output
 

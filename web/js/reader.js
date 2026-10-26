@@ -644,7 +644,7 @@ export class Reader {
   _insertCheckpoints() {
     if (!settings.checkpoints) return;
     const secs = this.chapters.length ? this.chapters : (this.totalWords > 300 ? [{ text: this.book.title, id: '_doc', b: 0, intro: true }] : []);
-    const NO_CP = /^(key\s+takeaways?|summary|chapter\s+summary|recap|check\s+your\s+understanding|references|sources|further\s+reading|glossary|contents)$/i;
+    const NO_CP = /^(key\s+takeaways?|summary|chapter\s+summary|recap|check\s+your\s+understanding|references|sources|further\s+reading|glossary|contents|building\s+blocks|before\s+you\s+start|prerequisites|what\s+you\s+need\s+to\s+know|who\s+this\s+is\s+for|chapters|reviews|how\s+to\s+study|what\s+this\s+review\s+covers)$/i;
     secs.forEach((sec, i) => {
       // practice, worked-example and answer sections don't get a recall checkpoint
       if (!sec.intro && (classifyHeading(sec.text) || NO_CP.test(sec.text.replace(/^[\d.]+\s*/, '')))) return;

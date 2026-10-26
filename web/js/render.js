@@ -70,7 +70,7 @@ export function preprocess(src, opts = {}) {
 // ---------------------------------------------------------------------------
 // Render
 
-const CALLOUTS = { note: 'Note', tip: 'Tip', important: 'Important', warning: 'Warning', caution: 'Caution', info: 'Note', success: 'Tip', danger: 'Caution', example: 'Example', question: 'Question', quote: 'Quote', abstract: 'Summary', summary: 'Summary', todo: 'To do' };
+const CALLOUTS = { problem: 'The problem', goal: 'Goal', note: 'Note', tip: 'Tip', important: 'Important', warning: 'Warning', caution: 'Caution', info: 'Note', success: 'Tip', danger: 'Caution', example: 'Example', question: 'Question', quote: 'Quote', abstract: 'Summary', summary: 'Summary', todo: 'To do' };
 
 export function renderMarkdown(source, { bookId, rel, hideCitations = true } = {}) {
   const { src } = preprocess(source, { hideCitations });

@@ -27,7 +27,7 @@ CALLOUT_RE = re.compile(r"^\s*>\s*\[!([A-Za-z-]+)\]")
 KNOWN_CALLOUTS = {
     "note", "tip", "important", "warning", "caution", "info", "success", "danger", "quote", "abstract", "summary", "todo",
     "example", "worked-example", "solved", "question", "check", "quiz", "try", "try-it", "exercise",
-    "think", "reflect", "ponder", "thought", "food-for-thought",
+    "think", "reflect", "ponder", "thought", "food-for-thought", "problem", "goal",
 }
 TB_KIND = {"example": "example", "worked-example": "example", "solved": "example",
            "question": "question", "check": "question", "quiz": "question", "try": "question", "try-it": "question", "exercise": "question",
@@ -37,7 +37,9 @@ TB_KIND = {"example": "example", "worked-example": "example", "solved": "example
 PSET = re.compile(r"^(questions?\s+for\s+short\s+answers?|short[-\s]?answer(\s+questions?)?|very\s+short[-\s]?answer(\s+questions?)?|long[-\s]?answer(\s+questions?)?|objective(\s*[-–—:]?\s*(i{1,2}|[12]|type))?(\s+questions?)?|multiple[-\s]choice(\s+questions?)?|mcqs?|exercises?|problems?|numerical\s+problems?|practice\s+(problems?|questions?|exercises?|set)|review\s+questions?|(end[-\s]of[-\s]chapter\s+)?(questions|problems|exercises)|test\s+yourself|self[-\s]?test|assertion[-\s]reason(\s+questions?)?)$", re.I)
 KEY = re.compile(r"^(answers?|answer\s+key|answers?\s+(to|for)\s+.+|solutions?\s+(to|for)\s+.+|hints?\s+(and|&)\s+solutions?|answers?\s+(and|&)\s+(solutions?|hints?))$", re.I)
 EXAMPLES = re.compile(r"^(worked[-\s]*(out\s+)?examples?|solved\s+(examples?|problems?)|illustrative\s+examples?)$", re.I)
-NO_CHECKPOINT = re.compile(r"^(key\s+takeaways?|summary|chapter\s+summary|recap|check\s+your\s+understanding|references|sources|further\s+reading|glossary|contents)$", re.I)
+NO_CHECKPOINT = re.compile(r"^(key\s+takeaways?|summary|chapter\s+summary|recap|check\s+your\s+understanding|references|sources|further\s+reading|glossary|contents|building\s+blocks|before\s+you\s+start|prerequisites|what\s+you\s+need\s+to\s+know|who\s+this\s+is\s+for|chapters|reviews|how\s+to\s+study|what\s+this\s+review\s+covers)$", re.I)
+BLOCKS_HEADING = re.compile(r"^(building\s+blocks|before\s+you\s+start|prerequisites|what\s+you\s+need\s+to\s+know)$", re.I)
+FILLER = re.compile(r"\b(basically|obviously|simply put|needless to say|it goes without saying|delve[sd]?|delving|leverag(?:e|es|ed|ing)|utili[sz](?:e|es|ed|ing)|seamless(?:ly)?|robust|game-changing|cutting-edge|supercharg(?:e|es|ed|ing)|in today's world)\b", re.I)
 
 
 def bare(text):
@@ -255,6 +257,83 @@ def check_links(path, body_lines, offset, warns):
                         warns.append(f"line {i}: refers to {'Example' if kind == 'example' else 'Quick check'} {num}, but {where} has no callout titled that way")
 
 
+def check_teaching(body_lines, offset, term_defs, warns, is_map=False):
+    """Building-block checks: terms used before they are defined; very long sentences; filler words."""
+    prose = []                     # (line number, text) of teaching prose
+    fence, seen_h2, skip_level = None, False, 0
+    for i, line in enumerate(body_lines, start=offset + 1):
+        s = line.strip()
+        fm = re.match(r"^(`{3,}|~{3,})", s.lstrip("> ").strip())
+        if fm:
+            fence = None if fence and fm.group(1).startswith(fence) else (fence or fm.group(1))
+            continue
+        if fence:
+            continue
+        hm = re.match(r"^(#{1,6})\s+(.*?)\s*#*\s*$", line)
+        if hm:
+            level = len(hm.group(1))
+            if level == 2:
+                seen_h2 = True
+            if skip_level and level <= skip_level:
+                skip_level = 0
+            if BLOCKS_HEADING.match(bare(hm.group(2))) or classify(hm.group(2)) == "key":
+                skip_level = level          # prerequisite lists and answer keys may name terms early
+            continue
+        if not seen_h2 or skip_level or not s or re.match(r"^\s*>\s*\[!", line) or s.startswith("|"):
+            continue
+        prose.append((i, line))
+
+    def clean(text):
+        text = re.sub(r"`[^`]*`", " ", text)
+        text = MATH_SPAN.sub(" ", text)
+        text = re.sub(r"\]\([^)]*\)", "]", text)
+        return text
+
+    # 1. terms used before their definition
+    found, done = [], set()
+    for term, def_line in term_defs:
+        key = term.lower()
+        if key in done:
+            continue
+        done.add(key)
+        pat = re.compile(r"(?<![\w-])" + re.escape(term) + r"(?:s|es)?(?![\w-])", re.I)
+        for ln, text in prose:
+            if ln >= def_line:
+                break
+            t = clean(text)
+            if re.search(r"(?i)defined in|see section|see chapter|explained in|introduced in", t):
+                continue
+            if pat.search(t):
+                found.append((ln, term, def_line))
+                break
+    for ln, term, d in sorted(found)[:8]:
+        warns.append(f"line {ln}: '{term}' is used before it is defined (line {d}) — define it first, or add '(defined in Section …)'")
+    if len(found) > 8:
+        warns.append(f"…and {len(found) - 8} more terms used before their definition")
+
+    if is_map:
+        return
+    # 2. very long sentences (manual style: aim for 25 words or fewer)
+    long_ones = []
+    for ln, text in prose:
+        t = re.sub(r"^\s*(?:>\s*)?(?:[-*+]\s+|\d+[.)]\s+)?", "", clean(text))
+        for sent in re.split(r"(?<=[.!?])\s+(?=[A-Z(\"'*])", t):
+            n = len(re.findall(r"[A-Za-z0-9][\w'’-]*", sent))
+            if n > 35:
+                long_ones.append((ln, n))
+    if long_ones:
+        eg = ", ".join(f"line {ln} ({n} words)" for ln, n in long_ones[:3])
+        warns.append(f"{len(long_ones)} sentence(s) over 35 words, e.g. {eg} — split them; aim for 25 words or fewer")
+    # 3. filler and hype words
+    hits = {}
+    for ln, text in prose:
+        for m in FILLER.finditer(clean(text)):
+            hits.setdefault(m.group(1).lower(), []).append(ln)
+    if hits:
+        desc = "; ".join(f"'{w}' (line{'s' if len(l) > 1 else ''} {', '.join(map(str, l[:3]))})" for w, l in list(hits.items())[:5])
+        warns.append(f"filler or hype words: {desc} — say it plainly")
+
+
 def strip_frontmatter(lines):
     if lines and lines[0].strip() == "---":
         for i in range(1, min(len(lines), 200)):
@@ -282,6 +361,7 @@ def check(path):
     in_fence, fence = False, ""
     h1, headings = [], []          # headings: dict(level, title, line, cls, words)
     terms, mid_bold, generic_bold = [], 0, []
+    term_defs = []                 # (term, line) where each key term is defined
     stack = []                     # heading stack for textbook regions
     problems = []                  # dict(line, scope, set, num, opts, inline_answer, text)
     key = {}                       # scope -> group -> num -> (line, text)
@@ -404,6 +484,7 @@ def check(path):
                 generic_bold.append((i, term))
             elif len(rest) >= 12:
                 terms.append(term)
+                term_defs.append((term, i))
             else:
                 warns.append(f"line {i}: '**{term}**' has no definition after it (write at least a full clause)")
         for bm in BOLD_RE.finditer(line):
@@ -431,18 +512,21 @@ def check(path):
         warns.append(f"the '# Title' is on line {h1[0]} — put it first")
 
     sections = [h for h in headings if h["level"] == 2]
+    title = next((h["title"] for h in headings if h["level"] == 1), "")
+    is_map = bool(re.match(r"^00[-_. ]", os.path.basename(path))) or bool(re.search(r"course\s+map", title, re.I))
+    is_review = bool(re.match(r"(?i)^review\b", bare(title)))
     if len(sections) < 2:
         warns.append(f"only {len(sections)} '##' chapter(s) — use at least two so Margin can build contents and checkpoints")
     for sec in sections:
         b = bare(sec["title"])
         exempt = classify(sec["title"]) or NO_CHECKPOINT.match(b)
-        if sec["words"] < 140 and not exempt:
+        if sec["words"] < 140 and not exempt and not is_map and not is_review:
             warns.append(f"line {sec['line']}: section '{sec['title']}' has {sec['words']} words — under 140 gets no recall checkpoint")
         if sec["words"] > 1500 and not exempt:
             warns.append(f"line {sec['line']}: section '{sec['title']}' has {sec['words']} words — consider splitting it")
 
     uniq = sorted(set(t.lower() for t in terms))
-    if len(uniq) < 4:
+    if len(uniq) < 4 and not is_map and not is_review:
         warns.append(f"only {len(uniq)} defined key term(s) — write at least 4 as '- **Term**: definition' (the quiz needs 4)")
     if mid_bold > max(8, len(uniq) * 2):
         warns.append(f"{mid_bold} bold phrases in running text — keep **bold** for key terms, use *italics* for emphasis")
@@ -502,8 +586,15 @@ def check(path):
                         warns.append(f"line {ln}: answer {n} in '{g}' has no matching question")
         if problems and not key_seen and not all(p["inline"] for p in problems):
             warns.append("problem sets found but no '## Answer Key' section")
+        if not is_review and not any(BLOCKS_HEADING.match(bare(h["title"])) for h in headings):
+            warns.append("no '## Building Blocks' section — list the prerequisites (with refreshers and links) and the new ideas in teaching order")
 
+    n_before = len(warns)
     check_links(path, lines, offset, warns)
+    if is_map:   # chapters listed in a course map may simply not be written yet
+        warns[n_before:] = [re.sub(r"'Chapter (\d+)' won't be a link — no chapter \d+ file \(e\.g\. '(\d+)-….md'\) in this folder",
+                                   r"Chapter \1 is planned but not written yet ('\2-….md')", w) for w in warns[n_before:]]
+    check_teaching(lines, offset, term_defs, warns, is_map)
     return errors, warns, len(sections), len(uniq), tb
 
 

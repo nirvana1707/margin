@@ -287,6 +287,9 @@ body.calm .r-top:hover, body.calm .r-foot:hover { opacity: 1; }
 .md .callout-warning { --c: #d08a12; } .md .callout-caution { --c: #d14343; }
 
 /* textbook callouts */
+.md .callout-problem, .md .callout-goal { --c: #b8322a; }
+.md .callout-problem { font-size: 1em; border-left-width: 4px; }
+.md .callout-problem .callout-title::before { content: "◎"; margin-right: .1em; }
 .md .callout-example { --c: #2f7f9e; } .md .callout-question { --c: #b0601b; } .md .callout-think { --c: #7b55c7; }
 .md .tb { font-size: .95em; }
 .md .tb .callout-title::before { font-size: 1.15em; letter-spacing: 0; }

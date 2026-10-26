@@ -2,9 +2,22 @@
 
 This sample chapter shows Margin's textbook format: worked examples with solutions you can reveal, quick checks and food-for-thought questions inside the text, and practice problems with an answer key at the end. By the end you will be able to describe motion along a line and solve problems with the equations of uniformly accelerated motion.
 
+> [!PROBLEM] The question this chapter answers
+> A driver moving at 54 km/h sees a red light 30 m ahead and brakes at $4\ \text{m/s}^2$. Does she stop before the light? You can't answer this yet — by the end of the chapter you will.
+
+## Building Blocks
+
+What you need before starting:
+
+- *Units* — every measurement is a number times a unit, such as 30 m or 3 s; 1 m/s = 3.6 km/h.
+- *Rate of change* — how fast one quantity changes compared with another, such as kilometres per hour. The notation $\dfrac{dx}{dt}$ means "the rate at which $x$ changes with time at one instant".
+- *Line graphs* — reading a value and the slope (steepness) of a line.
+
+New ideas in this chapter, in order: position → distance and displacement → speed and velocity → acceleration → equations of motion → free fall.
+
 ## 3.1 Position, Distance and Displacement
 
-To describe motion along a straight line we first pick an *origin* and a positive direction. The position of a body is then a single number $x$, measured from the origin, positive on one side and negative on the other.
+To say where something is and how far it moved, we need a reference point. Along a straight line we pick an *origin* and a positive direction. The position of a body is then a single number $x$, measured from the origin, positive on one side and negative on the other.
 
 As a body moves, two different quantities tell us "how far" it has gone:
 
@@ -12,6 +25,8 @@ As a body moves, two different quantities tell us "how far" it has gone:
 - **Displacement**: the change in position, $\Delta x = x_2 - x_1$, which has both a size and a direction and can be positive, negative or zero.
 
 If you walk 5 m forward and then 3 m back, you have covered a distance of 8 m but your displacement is only 2 m forward. Distance cares about the whole journey; displacement cares only about where you started and where you ended up.
+
+*Not* displacement: the reading on a car's odometer. It only ever increases, even when the car drives back home, so it measures distance.
 
 > [!IMPORTANT]
 > Displacement depends only on the initial and final positions — not on the path taken between them.
@@ -40,20 +55,20 @@ Average speed is never smaller than the magnitude of average velocity, because t
 >
 > The displacement is $60 - 20 = 40$ km east, so the average velocity is $40 / 1.5 \approx 26.7$ km/h towards the east.
 
-> [!THINK] Food for thought
-> Can a body have zero velocity at some instant and still be accelerating at that instant? Try to think of an everyday example before reading on.
->
-> **Discussion:** Yes. A ball thrown straight up is momentarily at rest at the top of its flight, yet gravity is still changing its velocity at $9.8\ \text{m/s}^2$ downward. Zero velocity does not mean zero acceleration.
-
 ## 3.3 Acceleration
 
-When velocity changes, the body accelerates.
+Velocity tells us how fast position changes. But velocity itself can change: a car pulls away from a junction, a ball slows as it rises. We need a quantity for how fast *velocity* changes — one that does for velocity (Section 3.2) what velocity does for position (Section 3.1).
 
 - **Acceleration**: the rate of change of velocity, $a = \dfrac{dv}{dt}$; in SI units it is measured in metres per second squared ($\text{m/s}^2$).
 
 Acceleration has a direction. If the acceleration points opposite to the velocity, the body slows down; this is often called *deceleration* or *retardation*. A negative sign on its own does not mean slowing down — it only means "pointing in the negative direction". A car moving in the negative direction with negative acceleration is actually speeding up.
 
 On a velocity–time graph, the slope at any point gives the acceleration, and the area under the graph between two times gives the displacement in that interval. These two graphical facts are often the quickest way to solve a problem, and they lead directly to the equations of Section 3.4.
+
+> [!THINK] Food for thought
+> Can a body have zero velocity at some instant and still be accelerating at that instant? Try to think of an everyday example before reading on.
+>
+> **Discussion:** Yes. A ball thrown straight up is momentarily at rest at the top of its flight, yet gravity is still changing its velocity at $9.8\ \text{m/s}^2$ downward. Zero velocity does not mean zero acceleration.
 
 > [!QUESTION] Quick check 3.2
 > A cyclist's velocity increases steadily from 5 m/s to 20 m/s in 3 s. What is her acceleration?
@@ -95,6 +110,11 @@ Each equation leaves out one quantity: the first has no $s$, the second has no $
 >
 > From $s = ut + \tfrac{1}{2}at^2$, $s = 0 + \tfrac{1}{2} \times 2 \times 10^2 = 100$ m.
 
+> [!QUESTION] Quick check 3.3 — finish the solution
+> A ball rolls from rest down a slope with $a = 3\ \text{m/s}^2$. Complete the working: after 4 s, $v = 0 + 3 \times 4 = \;?$ and $s = \tfrac{1}{2} \times 3 \times 4^2 = \;?$
+>
+> **Answer:** $v = 12$ m/s and $s = 24$ m.
+
 ## 3.5 Free Fall
 
 Near the Earth's surface, and when air resistance can be ignored, every body falls with the same constant acceleration, about $9.8\ \text{m/s}^2$ downward.
@@ -131,6 +151,15 @@ Free fall is simply uniformly accelerated motion with $a = g$ pointing down, so 
 >
 > The speed is $v = at = 10 \times 3 = 30$ m/s.
 
+> [!EXAMPLE] Example 3.6 — Back to the opening problem
+> A driver moving at 54 km/h sees a red light 30 m ahead and brakes at $4\ \text{m/s}^2$. Does she stop before the light?
+>
+> **Solution:** *Given:* $u = 54$ km/h $= 54 \div 3.6 = 15$ m/s, final speed $v = 0$, deceleration $4\ \text{m/s}^2$ (so $a = -4\ \text{m/s}^2$). *Find:* the stopping distance $s$.
+>
+> We know $u$, $v$ and $a$ and want $s$, so use the equation without $t$ (Section 3.4): $v^2 = u^2 + 2as$ gives $0 = 15^2 - 2 \times 4 \times s$, so $s = \dfrac{225}{8} \approx 28.1$ m.
+>
+> *Check:* 28.1 m is less than 30 m, so she stops about 1.9 m before the light. The units are metres and the size is sensible for a car braking from city speed.
+
 ## Key Takeaways
 
 - Distance is the length of the path; displacement is the change in position and has a direction.
@@ -138,6 +167,7 @@ Free fall is simply uniformly accelerated motion with $a = g$ pointing down, so 
 - Acceleration is the rate of change of velocity — the slope of the velocity–time graph.
 - For constant acceleration, $v = u + at$, $s = ut + \frac{1}{2}at^2$ and $v^2 = u^2 + 2as$ (Section 3.4).
 - In free fall every body has the same downward acceleration $g$, if air resistance is negligible.
+- Next: these ideas describe *how* bodies move. The laws of motion explain *why* — the forces behind every acceleration.
 
 ## Questions for Short Answer
 
@@ -192,25 +222,25 @@ Free fall is simply uniformly accelerated motion with $a = g$ pointing down, so 
 
 ### Questions for Short Answer
 
-1. No. If the body moves, it covers some distance, so its average speed is greater than zero. Its average *velocity* can be zero, though, if it returns to its starting point.
-2. Instantaneous speed — the speed at that moment.
+1. No. If the body moves, it covers some distance, so its average speed is greater than zero. Its average *velocity* can be zero, though, if it returns to its starting point (Section 3.2).
+2. Instantaneous speed — the speed at that moment (Section 3.2).
 3. Its velocity is zero, and its acceleration is $g \approx 9.8\ \text{m/s}^2$ directed downward (see Section 3.5 and Example 3.3).
 
 ### Objective I
 
-1. (b)
-2. (c)
-3. (c)
-4. (b)
+1. (b) — Section 3.1
+2. (c) — Section 3.3
+3. (c) — Section 3.4
+4. (b) — Section 3.5
 
 ### Objective II
 
-1. (a), (c)
-2. (a), (b), (c)
+1. (a), (c) — Sections 3.1 and 3.2
+2. (a), (b), (c) — Sections 3.2 and 3.3
 
 ### Exercises
 
-1. 12 km/h — total distance 5 km in 25 min $= \frac{5}{12}$ h, so $5 \div \frac{5}{12} = 12$ km/h.
+1. 12 km/h — total distance 5 km in 25 min $= \frac{5}{12}$ h, so $5 \div \frac{5}{12} = 12$ km/h (Section 3.2).
 2. $a = 4\ \text{m/s}^2$; distance $= 100$ m — from $a = \frac{30 - 10}{5}$ and $s = \frac{10 + 30}{2} \times 5$, the same method as Example 3.2.
-3. Maximum height 20 m; total time 4 s — from $h = \frac{u^2}{2g} = \frac{400}{20}$ and $t = \frac{2u}{g}$.
-4. 40 m; 4 s — 72 km/h $= 20$ m/s, so $s = \frac{20^2}{2 \times 5} = 40$ m and $t = \frac{20}{5} = 4$ s.
+3. Maximum height 20 m; total time 4 s — from $h = \frac{u^2}{2g} = \frac{400}{20}$ and $t = \frac{2u}{g}$ (Section 3.5, Example 3.3).
+4. 40 m; 4 s — 72 km/h $= 20$ m/s, so $s = \frac{20^2}{2 \times 5} = 40$ m and $t = \frac{20}{5} = 4$ s — the same method as Example 3.6.

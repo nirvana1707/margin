@@ -72,6 +72,7 @@ Write each important concept as a bold term **at the very start** of a list item
 | Worked example | `> [!EXAMPLE] Example 2 — title` … then a paragraph starting `**Solution:**` (folds away until the reader asks) |
 | In-text question | `> [!QUESTION] Quick check` … optional `**Hint:**`, then `**Answer:**` (revealed on demand, self-marked) |
 | Thought-provoking question | `> [!THINK] Food for thought` … optional `**Discussion:**` (reader can jot their own answer) |
+| Driving question | `> [!PROBLEM] The question this guide answers` — answered at the end |
 | Section break | A line with `---` (not at the very top of the file) |
 | Images | Relative paths next to the file: `![Loss curve](img/loss.png)` |
 | Links to other notes | Relative `.md` links: `[see the companion notes](attention-notes.md)` |
@@ -92,28 +93,56 @@ Margin makes navigation links out of references, so readers can jump around and 
 - Link back when an idea is reused and forward to where it is applied. Only link to headings and files that exist.
 - Don't add a hand-made table of contents — Margin builds one.
 
-## 6. Write to be learned, not just read
+## 6. Teach from basic building blocks
 
-Margin supports active learning; give the reader material to work with:
+Write so that someone who knows only the stated prerequisites can follow every step. Full rationale and sources: `references/teaching-method.md`.
 
-1. **Open with the "why"**: a short intro paragraph under the title saying what the reader will be able to do or understand.
-2. **One idea per chapter**, building from fundamentals to applications.
-3. **Concrete examples** right after each abstract idea (a worked example, a small code snippet, an analogy).
-4. **Explain the mechanism**, not just the fact — the reader writes a summary at each checkpoint, so each section needs a clear core message.
-5. Use a `> [!IMPORTANT]` callout for the single most important point of a chapter, and `> [!WARNING]` for common mistakes or misconceptions.
-6. End with `## Key Takeaways` (3–7 bullets of the core ideas) and, optionally, `## Check Your Understanding` with 3–5 open questions — questions only, answers in a `<details>` block.
+**Plan first.** Before writing, list the concepts the topic needs and order them so each depends only on earlier ones. Note what the reader is assumed to know. If two ideas depend on each other, split one into smaller parts.
+
+**Open well.**
+- Under the title, say what the reader will be able to do or understand.
+- If the topic has prerequisites, add `## Building Blocks`: each prerequisite in *italics* with a one-line refresher (and a link if it is explained elsewhere), then the new ideas in the order you will teach them.
+- Optionally, put a motivating question in `> [!PROBLEM]` and answer it at the end.
+
+**One concept at a time, always in this order:**
+1. *Why* it matters — the problem it solves.
+2. *Mechanism before name* — what happens, in plain words, with one concrete case.
+3. `- **Term**: definition`.
+4. The formal version — formula, code, rule or diagram — with every symbol or part explained next to it.
+5. An example and a non-example (a near-miss that does not fit, and why).
+6. How it connects to the previous idea.
+
+**Rules.**
+- **Never use a term before it is defined.** If a later idea must be mentioned early, say where it is explained: *"(see Section 3)"*.
+- **Derive, don't assert**: show why a result follows; if something is taken as given, say so.
+- **One analogy per idea**, kept and extended, with a sentence on where it breaks.
+- Use `> [!IMPORTANT]` for the single most important point of a section, and `> [!WARNING]` for common mistakes or misconceptions.
+- For readers who want more, put advanced detail in `<details><summary>Going deeper</summary> … </details>` so the main path stays simple.
+
+**Make the reader think.**
+- A `> [!QUESTION]` quick check after the harder sections, and a `> [!THINK]` food-for-thought question where an idea has a surprising edge case.
+- End with `## Key Takeaways` (3–7 bullets) and, optionally, `## Check Your Understanding` with 3–5 open questions — questions only, answers in a `<details>` block.
+
+**Write clearly — like a good manual, about 80% of the way.**
+- One idea per sentence, usually ≤ 25 words; procedures as numbered steps with one action each.
+- Active voice, present tense, "you" for the reader; one word for one concept (no synonym rotation).
+- No filler or hype (*basically, obviously, simply, just, delve, leverage, seamless, robust*).
+- Never drop a fact, number, condition or hedge to make a sentence shorter. Being clear is never an excuse for being wrong: flag approximations and say what is not known.
 
 ## 7. Final check before saving
 
 - [ ] One `#` title on line 1, at least two `##` chapters of 150–800 words
+- [ ] Concepts in dependency order; prerequisites stated; every term defined before it is used
+- [ ] Each concept: why → mechanism → definition → formal version → example and non-example
+- [ ] Short active sentences, one term per concept, no filler — and no fact dropped
 - [ ] At least 4 `**Term**: definition` items, bold used only for key terms
 - [ ] Every code block has a language; math blocks on their own lines; currency escaped
 - [ ] No citation artefacts, no chat filler, not wrapped in a ```` ```markdown ```` fence when saved as a file
 - [ ] Links and `Section N` references point at headings and files that exist
 - [ ] Saved with a `.md` extension in the folder the user reads in Margin
 
-If a `scripts/check_margin.py` file is next to this skill and Python is available, run `python scripts/check_margin.py <file.md>` and fix what it reports.
+If a `scripts/check_margin.py` file is next to this skill and Python is available, run `python scripts/check_margin.py <file.md>` and fix what it reports (including terms used before they are defined, very long sentences and filler words).
 
 See `references/example.md` for a complete, correctly formatted example.
 
-For a full practice chapter — numbered sections, worked examples, quick checks, food for thought, end-of-chapter questions, objective MCQs, exercises and an answer key — use the **margin-textbook** skill instead.
+To plan a whole subject as a series of chapters, use the **margin-course** skill. For a full practice chapter — numbered sections, worked examples, quick checks, food for thought, end-of-chapter questions, objective MCQs, exercises and an answer key — use the **margin-textbook** skill instead.
